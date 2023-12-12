@@ -79,7 +79,9 @@ func ExampleCompile() {
 	// invalid spec and invalid subSchema
 	_, err = c.Compile("invalid-spec.json#/components/schemas/FooInvalid")
 	if err != nil {
-		// This fails as expected :)
+		// This fails as expected, but for the wrong reason. FooInvalid contains a $ref to somewhere
+		// which doesn't exist, but the actual error is about missing required "openapi" and "info"
+		// properties again.
 		fmt.Println("failed to compile subschema \"invalid-spec.json#/components/schemas/FooInvalid\"")
 	} else {
 		fmt.Println("ERROR: unexpectedly compiled invalid-spec.json#/components/schemas/FooInvalid with extensions:", len(validSubSchema.Extensions))
