@@ -1,0 +1,387 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Versori",
+    "description": "Versori is a platform providing no-code integrations.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Versori",
+      "url": "https://versori.com",
+      "email": "support@versori.com"
+    },
+    "license": {
+      "identifier": "Apache-2.0",
+      "name": "Apache License 2.0"
+    },
+    "summary": "Versori is a platform providing no-code integrations.",
+    "termsOfService": "https://www.versori.com/terms-of-service"
+  },
+  "jsonSchemaDialect": "https://spec.openapis.org/oas/3.1/dialect/base",
+  "externalDocs": {
+    "description": "Versori API Documentation",
+    "url": "https://docs.versori.com"
+  },
+  "servers": [
+    {
+      "url": "https://platform.versori.com/api",
+      "description": "Production"
+    },
+    {
+      "url": "https://platform-{env}.versori.io/api",
+      "description": "Non-production environments",
+      "variables": {
+        "env": {
+          "default": "staging",
+          "enum": [
+            "staging",
+            "dev"
+          ]
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/foo": {
+      "get": {
+        "summary": "Foo",
+        "description": "Foo",
+        "operationId": "Foo",
+        "tags": [
+          "Foo"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Foo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Foo",
+        "description": "Create Foo",
+        "operationId": "CreateFoo",
+        "tags": [
+          "Foo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FooInvalid"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Foo"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/foo/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get Foo",
+        "description": "Get Foo",
+        "operationId": "GetFoo",
+        "tags": [
+          "Foo"
+        ],
+        "parameters": [
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Foo"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Foo",
+        "description": "Delete Foo",
+        "operationId": "DeleteFoo",
+        "tags": [
+          "Foo"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks": {
+      "post": {
+        "summary": "Webhook",
+        "description": "Webhook",
+        "operationId": "Webhook",
+        "tags": [
+          "Webhook"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Webhook"
+              }
+            }
+          }
+        },
+        "callbacks": {
+          "foo_updated": {
+            "${request.body#/url}": {
+              "post": {
+                "summary": "Foo Updated",
+                "description": "Foo Updated",
+                "operationId": "FooUpdated",
+                "tags": [
+                  "Foo"
+                ],
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/Foo"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "204": {
+                    "description": "No Content"
+                  },
+                  "default": {
+                    "description": "Error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {
+    "foo_deleted": {
+      "post": {
+        "summary": "Foo Deleted",
+        "description": "Foo Deleted",
+        "operationId": "FooDeleted",
+        "tags": [
+          "Foo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Foo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "foo_updated": {
+      "$ref": "#/components/pathItems/foo_updated"
+    }
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "bar": {
+            "$ref": "#/components/schemas/Bar"
+          }
+        }
+      },
+      "FooInvalid": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "bar": {
+            "$ref": "#/components/schemas/BarNotExists"
+          }
+        }
+      },
+      "Bar": {
+        "type": "string"
+      },
+      "Webhook": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "url": {
+            "type": "string"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "pathItems": {
+      "foo_updated": {
+        "post": {
+          "summary": "Foo Updated",
+          "description": "Foo Updated",
+          "operationId": "FooUpdated",
+          "tags": [
+            "Foo"
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Foo"
+                }
+              }
+            }
+          },
+          "responses": {
+            "202": {
+              "description": "Accepted"
+            },
+            "default": {
+              "description": "Error"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "Bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Foo",
+      "description": "Foo"
+    }
+  ]
+}
